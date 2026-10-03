@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wi-Fi Security Lab | Educational Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Consent Modal (Displayed until user agrees) -->
+    <div id="consent-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-badge">SECURITY AUDIT NOTICE</div>
+            <h2>AUTHORIZED SECURITY LAB</h2>
+            <p class="modal-intro">
+                This demonstration shows information that a normal browser may expose to a website.
+                Location, camera, and microphone tests require your explicit browser permission.
+            </p>
+            <div class="modal-rule-box">
+                <span class="lock-icon">🔒</span>
+                <div>
+                    <strong>Data Privacy Commitment:</strong><br>
+                    No passwords, private messages, authentication tokens, browser history,
+                    Wi-Fi passwords, private files, or data from other applications are collected.
+                </div>
+            </div>
+
+            <div class="nickname-input-group">
+                <label for="nickname-input">Participant Nickname (Optional):</label>
+                <input type="text" id="nickname-input" placeholder="e.g. TestPhone-01" maxlength="50">
+            </div>
+
+            <button id="consent-btn" class="btn-primary">I Agree &amp; Start Lab</button>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Container -->
+    <div class="dashboard-wrapper">
+        <header class="top-header">
+            <div class="header-left">
+                <div class="pulse-indicator"></div>
+                <h1>Wi-Fi Security Lab</h1>
+                <span class="mode-tag">Authorized Training</span>
+            </div>
+            <div class="header-right">
+                <span id="sse-status" class="sse-badge">SSE: Connecting...</span>
+            </div>
+        </header>
+
+        <main class="dashboard-grid">
+
+            <!-- 1. SESSION -->
+            <section class="card">
+                <div class="card-header">
+                    <span class="card-icon">🆔</span>
+                    <h2>SESSION</h2>
+                </div>
+                <div class="data-list">
+                    <div class="data-item">
+                        <span class="label">Synthetic Session ID:</span>
+                        <span id="val-session-id" class="mono highlight">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Participant Nickname:</span>
+                        <span id="val-nickname" class="mono">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Connection Time:</span>
+                        <span id="val-connected-at" class="mono">—</span>
+                    </div>
+                </div>
+                <button id="trigger-test-btn" class="btn-action">⚡ Run Security Test</button>
+            </section>
+
+            <!-- 2. NETWORK -->
+            <section class="card">
+                <div class="card-header">
+                    <span class="card-icon">🌐</span>
+                    <h2>NETWORK</h2>
+                    <span class="source-tag">Server-Visible</span>
+                </div>
+                <div class="data-list">
+                    <div class="data-item">
+                        <span class="label">Server-Visible IP:</span>
+                        <span id="val-server-ip" class="mono highlight">—</span>
+                    </div>
+                    <div class="data-item vertical">
+                        <span class="label">HTTP User-Agent:</span>
+                        <span id="val-user-agent" class="mono wrap-text">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Accept-Language:</span>
+                        <span id="val-accept-lang" class="mono">—</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. BROWSER -->
+            <section class="card">
+                <div class="card-header">
+                    <span class="card-icon">💻</span>
+                    <h2>BROWSER</h2>
+                    <span class="source-tag">Client-Reported</span>
+                </div>
+                <div class="data-grid-two">
+                    <div class="data-item">
+                        <span class="label">Platform:</span>
+                        <span id="val-platform" class="mono">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Language:</span>
+                        <span id="val-language" class="mono">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Time Zone:</span>
+                        <span id="val-timezone" class="mono">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Screen Resolution:</span>
+                        <span id="val-resolution" class="mono highlight">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Device Pixel Ratio:</span>
+                        <span id="val-dpr" class="mono">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Cookies Enabled:</span>
+                        <span id="val-cookies" class="mono">—</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="label">Online Status:</span>
+                        <span id="val-online" class="mono">—</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. PERMISSIONS -->
+            <section class="card">
+                <div class="card-header">
+                    <span class="card-icon">🛡️</span>
+                    <h2>PERMISSIONS</h2>
+                    <span class="source-tag">Explicit Prompt Required</span>
+                </div>
+                <p class="perm-desc">
+                    These APIs cannot be accessed silently. The browser enforces a strict permission dialog.
+                </p>
+                <div class="perm-table">
+                    <div class="perm-row">
+                        <div class="perm-info">
+                            <strong>Location</strong>
+                            <small id="location-detail">navigator.geolocation</small>
+                        </div>
+                        <span id="status-location" class="perm-badge pending">NOT TESTED</span>
+                        <button id="btn-test-location" class="btn-sm">Test</button>
+                    </div>
+
+                    <div class="perm-row">
+                        <div class="perm-info">
+                            <strong>Camera</strong>
+                            <small id="camera-detail">getUserMedia({video: true})</small>
+                        </div>
+                        <span id="status-camera" class="perm-badge pending">NOT TESTED</span>
+                        <button id="btn-test-camera" class="btn-sm">Test</button>
+                    </div>
+
+                    <div class="perm-row">
+                        <div class="perm-info">
+                            <strong>Microphone</strong>
+                            <small id="mic-detail">getUserMedia({audio: true})</small>
+                        </div>
+                        <span id="status-microphone" class="perm-badge pending">NOT TESTED</span>
+                        <button id="btn-test-microphone" class="btn-sm">Test</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. LIVE EVENTS (SSE) -->
+            <section class="card full-width">
+                <div class="card-header">
+                    <span class="card-icon">📡</span>
+                    <h2>LIVE EVENTS</h2>
+                    <span class="source-tag">Server-Sent Events (SSE)</span>
+                </div>
+                <div id="events-log" class="events-terminal">
+                    <div class="event-line system-msg">[SYSTEM] Waiting for lab events...</div>
+                </div>
+            </section>
+
+            <!-- 6. LIMITATIONS DISCLAIMER -->
+            <section class="limitations-banner full-width">
+                <div class="banner-icon">ℹ️</div>
+                <div class="banner-content">
+                    <h3>Browser Security Boundaries &amp; Limitations</h3>
+                    <p>
+                        A normal website cannot directly read another website's cookies, passwords,
+                        SMS, contacts, Wi-Fi password, private files, or data belonging to another application.
+                    </p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
