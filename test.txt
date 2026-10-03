@@ -1,0 +1,372 @@
+Build a complete, runnable cybersecurity-training web application called `user_data_lab`.
+
+The purpose is to demonstrate how a malicious-looking website could collect information that a participant voluntarily provides, while also demonstrating the limits of browser security.
+
+IMPORTANT:
+This must be a controlled training laboratory. Do not implement credential theft, malware, exploitation, stealth collection, permission bypasses, or unauthorized access.
+
+TECH STACK:
+
+* Python 3
+* Flask
+* HTML
+* CSS
+* JavaScript
+* SQLite
+* Server-Sent Events (SSE)
+
+PROJECT:
+
+user_data_lab/
+├── app.py
+├── requirements.txt
+├── README.md
+├── database.py
+├── templates/
+│   ├── index.html
+│   ├── consent.html
+│   ├── result.html
+│   └── dashboard.html
+└── static/
+├── style.css
+└── app.js
+
+SERVER:
+
+Create a Flask server on:
+
+127.0.0.1:8080
+
+Keep it LOCAL ONLY by default.
+
+Add a configuration option allowing an instructor to change the bind address for a private isolated lab, but clearly warn that the application should not be exposed to the public Internet.
+
+CONSENT PAGE:
+
+Before collecting any browser information, show:
+
+"AUTHORIZED SECURITY TRAINING LAB
+
+This application demonstrates information that a normal browser may expose to a website.
+
+Only synthetic information and information you explicitly provide or authorize will be collected.
+
+Do not enter real passwords, banking credentials, authentication tokens, private messages, or other sensitive information."
+
+Require the participant to click:
+
+"I Agree & Start Lab"
+
+Do not collect browser information before consent.
+
+SYNTHETIC USER DATA:
+
+Provide fields for:
+
+* Training username
+* Training password
+* Fake account number
+* Fake phone number
+* Fake email
+* Device nickname
+
+Display a warning beside every field:
+
+"Use synthetic training data only."
+
+When submitted, store the values in the SQLite database as laboratory records.
+
+Never encourage users to enter real credentials.
+
+BROWSER INFORMATION:
+
+After consent, JavaScript may collect:
+
+* User-Agent
+* Browser language
+* Time zone
+* Screen width
+* Screen height
+* Device pixel ratio
+* Online status
+* Cookies-enabled status
+* Platform information when available
+
+Display exactly what is being collected before sending it to the server.
+
+NETWORK INFORMATION:
+
+The Flask server may record:
+
+* Timestamp
+* Server-observed IP address
+* HTTP User-Agent
+* Accept-Language
+* Requested endpoint
+
+Do not attempt to discover or scan other devices on the network.
+
+LOCATION DEMONSTRATION:
+
+Create a "Test Location Permission" button.
+
+Use the browser Geolocation API.
+
+The browser must show its normal permission prompt.
+
+If the user selects Allow:
+
+* Display the returned coordinates.
+* Clearly label them as permission-based location information.
+* Store them only as a training event.
+
+If the user selects Deny:
+
+* Record only "permission denied."
+
+Do not continuously track location.
+
+CAMERA DEMONSTRATION:
+
+Create a "Test Camera Permission" button.
+
+Use:
+
+navigator.mediaDevices.getUserMedia({video: true})
+
+The browser must show its normal permission prompt.
+
+If permission is granted:
+
+* Show the camera preview briefly.
+* Do not save images.
+* Do not upload video.
+* Do not record.
+* Stop all camera tracks immediately after the demonstration.
+
+If denied:
+
+* Record "permission denied."
+
+MICROPHONE DEMONSTRATION:
+
+Create a "Test Microphone Permission" button.
+
+Use:
+
+navigator.mediaDevices.getUserMedia({audio: true})
+
+The browser must show its normal permission prompt.
+
+Do not record or save audio.
+
+Stop the microphone immediately after permission testing.
+
+LIVE EVENT SYSTEM:
+
+Implement:
+
+GET /events/stream
+
+using Server-Sent Events.
+
+When a participant performs a lab action, broadcast a harmless event to the instructor dashboard.
+
+Examples:
+
+"New training session started"
+
+"Browser information submitted"
+
+"Location permission granted"
+
+"Camera permission denied"
+
+"Synthetic login submitted"
+
+Do not send private data to other participants.
+
+DASHBOARD:
+
+Create a professional cybersecurity-style dashboard.
+
+Display:
+
+SESSION
+
+* Session ID
+* Device nickname
+* Start time
+
+NETWORK
+
+* Server-observed IP
+* User-Agent
+* Accept-Language
+
+BROWSER
+
+* Browser
+* Platform
+* Language
+* Time zone
+* Screen resolution
+* Pixel ratio
+* Online status
+* Cookies enabled
+
+PERMISSIONS
+
+* Location
+* Camera
+* Microphone
+
+SYNTHETIC DATA
+
+* Training username
+* Training password
+* Fake account number
+* Fake phone
+* Fake email
+
+EVENTS
+
+* Timestamp
+* Session ID
+* Event type
+
+Add:
+
+* Search
+* Filtering
+* Clear lab data
+* Export synthetic records as JSON
+
+Make it clear that all credentials displayed are training credentials.
+
+DATABASE:
+
+Use SQLite.
+
+Create tables for:
+
+sessions
+browser_info
+permission_events
+synthetic_submissions
+events
+
+Use parameterized SQL queries.
+
+Add database indexes where appropriate.
+
+SECURITY:
+
+Implement:
+
+* Input validation
+* Maximum field lengths
+* CSRF protection where appropriate
+* HTML escaping
+* Parameterized SQL
+* No shell execution
+* No eval()
+* No arbitrary file access
+* No command execution from user input
+* No environment-variable exposure
+* No password collection outside the explicitly labeled synthetic training form
+* Debug mode disabled
+
+DO NOT IMPLEMENT:
+
+* Credential theft
+* Real banking login cloning
+* Password harvesting
+* Cookie theft
+* Session-token theft
+* Browser-history extraction
+* Keylogging
+* SMS extraction
+* Contact extraction
+* Wi-Fi-password extraction
+* Private-file extraction
+* Other-application data extraction
+* Malware
+* Persistence
+* Remote shell
+* ARP spoofing
+* DNS hijacking
+* Packet sniffing
+* Exploitation of phones
+* Exploitation of routers
+* Permission bypass
+* Silent camera access
+* Silent microphone access
+* Silent location tracking
+
+TRAINING ATTACK SIMULATION:
+
+Add a simulated "Attacker View" that displays only synthetic records.
+
+The UI should resemble a cybersecurity training console, with:
+
+[SESSION]
+[NETWORK]
+[BROWSER]
+[PERMISSIONS]
+[SYNTHETIC CREDENTIALS]
+[LIVE EVENTS]
+
+Make it visually obvious that it is a simulation.
+
+Do not connect to any real bank, payment provider, email provider, social network, or external authentication service.
+
+README:
+
+Include exact commands:
+
+python -m venv .venv
+
+Windows:
+.venv\Scripts\activate
+
+Linux/macOS:
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+python app.py
+
+Then open:
+
+http://127.0.0.1:8080
+
+Explain:
+
+1. The participant gives consent.
+2. The browser provides permitted metadata.
+3. The participant enters synthetic information.
+4. Flask receives the synthetic submission.
+5. SQLite stores the training event.
+6. The dashboard displays the simulated attacker view.
+7. No real credentials or private device data are accessed.
+
+Also include a section:
+
+"WHAT A NORMAL WEBSITE CANNOT ACCESS"
+
+Explain that a normal website cannot simply read:
+
+* Other websites' cookies
+* Passwords saved in the browser
+* SMS
+* Contacts
+* Other apps' private data
+* Wi-Fi passwords
+* Private files
+* Banking-app data
+* Authentication tokens belonging to unrelated sites
+
+unless the user explicitly provides information, grants an applicable browser permission, installs software, or the device has been compromised.
+
+Make the complete project runnable immediately after installation.
